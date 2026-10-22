@@ -1,0 +1,13 @@
+{
+  "name": "vehicle-rental-cca2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Beginner Vehicle Rental System demo for a CI/CD assignment",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

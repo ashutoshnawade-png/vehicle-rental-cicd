@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vehicle Rental System</title>
+  <style>
+    :root { font-family: Arial, sans-serif; color: #182230; background: #f4f7fb; }
+    body { margin: 0; }
+    header { background: #163b66; color: white; padding: 28px 18px; text-align: center; }
+    main { max-width: 900px; margin: 28px auto; padding: 0 16px; }
+    .intro, .vehicle { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 3px 12px #10203012; }
+    .vehicles { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-top: 16px; }
+    .price { font-size: 1.25rem; font-weight: bold; color: #17633a; }
+    button { border: 0; border-radius: 7px; padding: 10px 14px; color: white; background: #1765ad; cursor: pointer; }
+    button:hover { background: #0f4d86; }
+    #message { min-height: 24px; margin-top: 14px; font-weight: bold; }
+    footer { text-align: center; color: #5d6877; padding: 22px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Vehicle Rental System</h1>
+    <p>Simple academic project demo for CI/CD deployment</p>
+  </header>
+  <main>
+    <section class="intro">
+      <h2>Available Vehicles</h2>
+      <p>Select a vehicle to simulate a rental booking. This demo does not save bookings to a database.</p>
+    </section>
+    <section class="vehicles" aria-label="Available vehicles">
+      <article class="vehicle">
+        <h3>Suzuki Swift</h3><p>Compact car · 5 seats</p>
+        <p class="price">₹2,000 / day</p>
+        <button data-vehicle="Suzuki Swift">Rent this vehicle</button>
+      </article>
+      <article class="vehicle">
+        <h3>Honda City</h3><p>Sedan · 5 seats</p>
+        <p class="price">₹2,500 / day</p>
+        <button data-vehicle="Honda City">Rent this vehicle</button>
+      </article>
+      <article class="vehicle">
+        <h3>Toyota Innova</h3><p>Family car · 7 seats</p>
+        <p class="price">₹3,500 / day</p>
+        <button data-vehicle="Toyota Innova">Rent this vehicle</button>
+      </article>
+    </section>
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+  <footer>CCA 2 · CI/CD Pipeline Implementation</footer>
+  <script>
+    document.querySelectorAll('button[data-vehicle]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.getElementById('message').textContent =
+          'Demo booking selected: ' + button.dataset.vehicle + '. No booking has been saved.';
+      });
+    });
+  </script>
+</body>
+</html>

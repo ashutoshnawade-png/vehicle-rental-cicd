@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-rental
+  labels:
+    app: vehicle-rental
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehicle-rental
+  template:
+    metadata:
+      labels:
+        app: vehicle-rental
+    spec:
+      containers:
+        - name: vehicle-rental
+          image: YOUR_DOCKERHUB_USERNAME/vehicle-rental-cca2:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
