@@ -1,15 +1,10 @@
+
 pipeline {
     agent any
 
-    options {
-        timestamps()
-        disableConcurrentBuilds()
-    }
-
     environment {
-        // Replace this with your Docker Hub username and repository.
-       IMAGE_NAME = 'ashutoshnawde/vehicle-rental-app'
-        APP_NAME = 'vehicle-rental'
+        IMAGE_NAME = 'ashutoshnawde/vehicle-rental-app'
+        APP_NAME = 'vehicle-rental-app'
     }
 
     stages {
@@ -19,63 +14,49 @@ pipeline {
             }
         }
 
-        stage('Build and Test') {
+        stage('Install and Test') {
             steps {
-                sh 'node --version'
+                sh 'npm install'
                 sh 'npm test'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t "$IMAGE_NAME:$BUILD_NUMBER" -t "$IMAGE_NAME:latest" .'
+                sh 'docker build -t $IMAGE_NAME:$BUILD_NUMBER .'
+                sh 'docker tag $IMAGE_NAME:$BUILD_NUMBER $IMAGE_NAME:latest'
             }
         }
 
-        stage('Push Image to Docker Hub') {
+        stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKERHUB_USER',
-                    passwordVariable: 'DOCKERHUB_TOKEN'
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh '''
-                        set +x
-                        echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
-                        docker push "$IMAGE_NAME:$BUILD_NUMBER"
-                        docker push "$IMAGE_NAME:latest"
-                        docker logout
-                    '''
+                    sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                    sh 'docker push $IMAGE_NAME:$BUILD_NUMBER'
+                    sh 'docker push $IMAGE_NAME:latest'
+                    sh 'docker logout'
                 }
             }
         }
 
-        stage('Deploy to Minikube') {
+        stage('Deploy Container') {
             steps {
-                sh '''
-                    kubectl apply -f k8s/deployment.yaml
-                    kubectl apply -f k8s/service.yaml
-                    kubectl set image deployment/$APP_NAME $APP_NAME="$IMAGE_NAME:$BUILD_NUMBER"
-                    kubectl rollout status deployment/$APP_NAME --timeout=180s
-                '''
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                sh 'kubectl get deployment "$APP_NAME"'
-                sh 'kubectl get pods -o wide'
-                sh 'kubectl get service "$APP_NAME"'
+                sh 'docker rm -f vehicle-rental-app || true'
+                sh 'docker run -d --restart unless-stopped --name vehicle-rental-app -p 8080:8080 $IMAGE_NAME:$BUILD_NUMBER'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline succeeded: image published and deployment updated.'
+            echo 'Vehicle Rental CI/CD pipeline succeeded!'
         }
         failure {
-            echo 'Pipeline failed. Open the failed stage console output and check the README troubleshooting notes.'
+            echo 'Pipeline failed. Check Console Output.'
         }
     }
 }
