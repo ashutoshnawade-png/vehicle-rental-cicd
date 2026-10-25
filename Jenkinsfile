@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         // Replace this with your Docker Hub username and repository.
-        IMAGE_NAME = 'YOUR_DOCKERHUB_USERNAME/vehicle-rental-cca2'
+       IMAGE_NAME = 'ashutoshnawde/vehicle-rental-app'
         APP_NAME = 'vehicle-rental'
     }
 
