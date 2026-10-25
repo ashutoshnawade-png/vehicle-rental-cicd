@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: vehicle-rental
-          image: YOUR_DOCKERHUB_USERNAME/vehicle-rental-cca2:latest
+          image: ashutoshnawde/vehicle-rental-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
