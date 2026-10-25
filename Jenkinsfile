@@ -46,7 +46,7 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 sh 'docker rm -f vehicle-rental-app || true'
-                sh 'docker run -d --restart unless-stopped --name vehicle-rental-app -p 8080:8080 $IMAGE_NAME:$BUILD_NUMBER'
+                sh 'docker run -d --restart unless-stopped --name vehicle-rental-app -p 3000:8080 $IMAGE_NAME:$BUILD_NUMBER'
             }
         }
     }
