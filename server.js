@@ -12,7 +12,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (req.url === '/' || req.url === '/index.html') {
+  if (req.url === '/' || req.url.startsWith('/index.html')) {
     fs.readFile(htmlPath, (err, data) => {
       if (err) {
         res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
